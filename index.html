@@ -1,0 +1,1530 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>University Timetable Generator</title>
+    <link
+      rel="stylesheet"
+      href="style.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <!-- Header -->
+      <header class="header">
+        <div class="header-content">
+          <div class="logo">
+            <i class="fas fa-graduation-cap"></i>
+            <h1>University Timetable Generator</h1>
+          </div>
+          <p class="subtitle">Multi-Semester Automated Scheduling System</p>
+          <!-- Theme Toggle Button -->
+          <button class="theme-toggle-btn" id="theme-toggle-btn">
+            <i class="fas fa-palette"></i> Customize Colors
+          </button>
+        </div>
+      </header>
+
+      <!-- Theme Customization Panel -->
+      <div class="theme-panel" id="theme-panel">
+        <div class="theme-panel-content">
+          <div class="theme-panel-header">
+            <h3><i class="fas fa-palette"></i> Theme Customization</h3>
+            <button class="close-theme-btn" id="close-theme-btn">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+          <div class="theme-panel-body">
+            <div class="color-picker-group">
+              <div class="color-picker-item">
+                <label for="header-color">
+                  <i class="fas fa-paint-brush"></i> Header Color
+                </label>
+                <div class="color-input-group">
+                  <input type="color" id="header-color" value="#4a90e2" />
+                  <input
+                    type="text"
+                    id="header-color-text"
+                    value="#4a90e2"
+                    readonly
+                  />
+                </div>
+              </div>
+              <div class="color-picker-item">
+                <label for="body-color">
+                  <i class="fas fa-fill-drip"></i> Body/Section Color
+                </label>
+                <div class="color-input-group">
+                  <input type="color" id="body-color" value="#f5f7fa" />
+                  <input
+                    type="text"
+                    id="body-color-text"
+                    value="#f5f7fa"
+                    readonly
+                  />
+                </div>
+              </div>
+              <div class="color-picker-item">
+                <label for="card-color">
+                  <i class="fas fa-square"></i> Card Background
+                </label>
+                <div class="color-input-group">
+                  <input type="color" id="card-color" value="#ffffff" />
+                  <input
+                    type="text"
+                    id="card-color-text"
+                    value="#ffffff"
+                    readonly
+                  />
+                </div>
+              </div>
+              <div class="color-picker-item">
+                <label for="accent-color">
+                  <i class="fas fa-star"></i> Accent Color
+                </label>
+                <div class="color-input-group">
+                  <input type="color" id="accent-color" value="#4a90e2" />
+                  <input
+                    type="text"
+                    id="accent-color-text"
+                    value="#4a90e2"
+                    readonly
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="theme-presets">
+              <h4><i class="fas fa-swatchbook"></i> Quick Presets</h4>
+              <div class="preset-buttons">
+                <button class="preset-btn" data-preset="default">
+                  <span
+                    class="preset-color"
+                    style="
+                      background: linear-gradient(135deg, #4a90e2, #357abd);
+                    "
+                  ></span>
+                  Default Blue
+                </button>
+                <button class="preset-btn" data-preset="purple">
+                  <span
+                    class="preset-color"
+                    style="
+                      background: linear-gradient(135deg, #667eea, #764ba2);
+                    "
+                  ></span>
+                  Purple
+                </button>
+                <button class="preset-btn" data-preset="green">
+                  <span
+                    class="preset-color"
+                    style="
+                      background: linear-gradient(135deg, #56ab2f, #a8e063);
+                    "
+                  ></span>
+                  Green
+                </button>
+                <button class="preset-btn" data-preset="orange">
+                  <span
+                    class="preset-color"
+                    style="
+                      background: linear-gradient(135deg, #f46b45, #eea849);
+                    "
+                  ></span>
+                  Orange
+                </button>
+                <button class="preset-btn" data-preset="red">
+                  <span
+                    class="preset-color"
+                    style="
+                      background: linear-gradient(135deg, #eb3349, #f45c43);
+                    "
+                  ></span>
+                  Red
+                </button>
+                <button class="preset-btn" data-preset="dark">
+                  <span
+                    class="preset-color"
+                    style="
+                      background: linear-gradient(135deg, #2c3e50, #34495e);
+                    "
+                  ></span>
+                  Dark
+                </button>
+              </div>
+            </div>
+
+            <div class="theme-actions">
+              <button class="btn btn-secondary" id="reset-theme-btn">
+                <i class="fas fa-undo"></i> Reset
+              </button>
+              <button class="btn btn-primary" id="apply-theme-btn">
+                <i class="fas fa-check"></i> Apply Theme
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Content -->
+      <div class="main-content">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+          <nav class="nav-menu">
+            <button class="nav-item active" data-section="input">
+              <i class="fas fa-keyboard"></i>
+              <span>Data Input</span>
+            </button>
+            <button class="nav-item" data-section="timetable">
+              <i class="fas fa-table"></i>
+              <span>View Timetable</span>
+            </button>
+            <button class="nav-item" data-section="conflicts">
+              <i class="fas fa-exclamation-triangle"></i>
+              <span>Conflicts</span>
+            </button>
+          </nav>
+        </aside>
+
+        <!-- Content Area -->
+        <main class="content">
+          <!-- Input Section -->
+          <section id="input-section" class="section active">
+            <h2 class="section-title">
+              <i class="fas fa-database"></i>
+              Input Data
+            </h2>
+
+            <!-- Semester Setup -->
+            <div class="card">
+              <h3 class="card-title">
+                <i class="fas fa-layer-group"></i> Semester Configuration
+              </h3>
+              <div class="semester-config">
+                <div class="form-group">
+                  <label>Number of Semesters</label>
+                  <input
+                    type="number"
+                    id="semester-count"
+                    min="1"
+                    max="10"
+                    value="3"
+                    placeholder="e.g., 3"
+                  />
+                </div>
+                <button class="btn btn-primary" id="setup-semesters-btn">
+                  <i class="fas fa-cog"></i> Setup Semesters
+                </button>
+              </div>
+              <div id="semesters-list"></div>
+            </div>
+
+            <!-- Days and Time Slots -->
+            <div class="card">
+              <h3 class="card-title">
+                <i class="fas fa-clock"></i> Schedule Configuration
+              </h3>
+              <div class="form-group">
+                <label>Days of the Week</label>
+                <div class="checkbox-group">
+                  <label
+                    ><input
+                      type="checkbox"
+                      class="day-checkbox"
+                      value="Monday"
+                      checked
+                    />
+                    Monday</label
+                  >
+                  <label
+                    ><input
+                      type="checkbox"
+                      class="day-checkbox"
+                      value="Tuesday"
+                      checked
+                    />
+                    Tuesday</label
+                  >
+                  <label
+                    ><input
+                      type="checkbox"
+                      class="day-checkbox"
+                      value="Wednesday"
+                      checked
+                    />
+                    Wednesday</label
+                  >
+                  <label
+                    ><input
+                      type="checkbox"
+                      class="day-checkbox"
+                      value="Thursday"
+                      checked
+                    />
+                    Thursday</label
+                  >
+                  <label
+                    ><input
+                      type="checkbox"
+                      class="day-checkbox"
+                      value="Friday"
+                      checked
+                    />
+                    Friday</label
+                  >
+                  <label
+                    ><input
+                      type="checkbox"
+                      class="day-checkbox"
+                      value="Saturday"
+                    />
+                    Saturday</label
+                  >
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>Time Slots</label>
+                <div id="time-slots-container">
+                  <div class="input-tag-group"></div>
+                </div>
+                <div class="input-group">
+                  <div
+                    class="searchable-select"
+                    id="timeslot-select"
+                    style="flex: 1"
+                  >
+                    <input
+                      type="text"
+                      id="new-timeslot"
+                      placeholder="e.g., 08:30 - 10:00"
+                      autocomplete="off"
+                    />
+                    <ul
+                      class="options"
+                      id="timeslot-options"
+                      style="display: none"
+                    ></ul>
+                  </div>
+                  <button class="btn btn-secondary" id="add-timeslot-btn">
+                    <i class="fas fa-plus"></i> Add
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Teachers -->
+            <div class="card">
+              <h3 class="card-title">
+                <i class="fas fa-chalkboard-teacher"></i> Teachers
+              </h3>
+              <div id="teachers-list" class="items-list"></div>
+              <div class="form-group">
+                <label>Teacher Name</label>
+                <div class="searchable-select" id="teacher-select">
+                  <input
+                    type="text"
+                    id="teacher-name"
+                    placeholder="Type to search teachers..."
+                    autocomplete="off"
+                  />
+                  <ul
+                    class="options"
+                    id="teacher-options"
+                    style="display: none"
+                  ></ul>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Subjects</label>
+                <div class="searchable-select" id="teacher-subjects-select">
+                  <div
+                    id="teacher-subjects-tags"
+                    class="input-tag-group"
+                    style="margin-bottom: 6px"
+                  ></div>
+                  <input
+                    type="text"
+                    id="teacher-subjects-input"
+                    placeholder="Type to search subjects and press Enter..."
+                    autocomplete="off"
+                  />
+                  <ul
+                    class="options"
+                    id="teacher-subjects-options"
+                    style="display: none"
+                  ></ul>
+                </div>
+                <input type="hidden" id="teacher-subjects" />
+                <small style="color: var(--text-light)"
+                  >Select multiple subjects. Press Enter or click to add; click
+                  × on a tag to remove.</small
+                >
+              </div>
+              <div class="form-group">
+                <label>Available Days</label>
+                <div class="checkbox-group" id="teacher-availability-container">
+                  <div class="day-availability-item">
+                    <label>
+                      <input
+                        type="checkbox"
+                        class="teacher-day"
+                        value="Monday"
+                      />
+                      Monday
+                    </label>
+                    <div
+                      class="day-time-slots"
+                      style="
+                        display: none;
+                        margin-left: 1.5rem;
+                        margin-top: 0.5rem;
+                      "
+                    >
+                      <select
+                        multiple
+                        class="day-slots-select"
+                        style="
+                          width: 100%;
+                          padding: 0.5rem;
+                          border: 1px solid var(--border-color);
+                          border-radius: 8px;
+                          background: var(--bg-color);
+                          min-height: 100px;
+                        "
+                      ></select>
+                      <small
+                        style="
+                          color: var(--text-light);
+                          display: block;
+                          margin-top: 2px;
+                        "
+                        >Hold Ctrl/Cmd to select multiple</small
+                      >
+                    </div>
+                  </div>
+                  <div class="day-availability-item">
+                    <label>
+                      <input
+                        type="checkbox"
+                        class="teacher-day"
+                        value="Tuesday"
+                      />
+                      Tuesday
+                    </label>
+                    <div
+                      class="day-time-slots"
+                      style="
+                        display: none;
+                        margin-left: 1.5rem;
+                        margin-top: 0.5rem;
+                      "
+                    >
+                      <select
+                        multiple
+                        class="day-slots-select"
+                        style="
+                          width: 100%;
+                          padding: 0.5rem;
+                          border: 1px solid var(--border-color);
+                          border-radius: 8px;
+                          background: var(--bg-color);
+                          min-height: 100px;
+                        "
+                      ></select>
+                      <small
+                        style="
+                          color: var(--text-light);
+                          display: block;
+                          margin-top: 2px;
+                        "
+                        >Hold Ctrl/Cmd to select multiple</small
+                      >
+                    </div>
+                  </div>
+                  <div class="day-availability-item">
+                    <label>
+                      <input
+                        type="checkbox"
+                        class="teacher-day"
+                        value="Wednesday"
+                      />
+                      Wednesday
+                    </label>
+                    <div
+                      class="day-time-slots"
+                      style="
+                        display: none;
+                        margin-left: 1.5rem;
+                        margin-top: 0.5rem;
+                      "
+                    >
+                      <select
+                        multiple
+                        class="day-slots-select"
+                        style="
+                          width: 100%;
+                          padding: 0.5rem;
+                          border: 1px solid var(--border-color);
+                          border-radius: 8px;
+                          background: var(--bg-color);
+                          min-height: 100px;
+                        "
+                      ></select>
+                      <small
+                        style="
+                          color: var(--text-light);
+                          display: block;
+                          margin-top: 2px;
+                        "
+                        >Hold Ctrl/Cmd to select multiple</small
+                      >
+                    </div>
+                  </div>
+                  <div class="day-availability-item">
+                    <label>
+                      <input
+                        type="checkbox"
+                        class="teacher-day"
+                        value="Thursday"
+                      />
+                      Thursday
+                    </label>
+                    <div
+                      class="day-time-slots"
+                      style="
+                        display: none;
+                        margin-left: 1.5rem;
+                        margin-top: 0.5rem;
+                      "
+                    >
+                      <select
+                        multiple
+                        class="day-slots-select"
+                        style="
+                          width: 100%;
+                          padding: 0.5rem;
+                          border: 1px solid var(--border-color);
+                          border-radius: 8px;
+                          background: var(--bg-color);
+                          min-height: 100px;
+                        "
+                      ></select>
+                      <small
+                        style="
+                          color: var(--text-light);
+                          display: block;
+                          margin-top: 2px;
+                        "
+                        >Hold Ctrl/Cmd to select multiple</small
+                      >
+                    </div>
+                  </div>
+                  <div class="day-availability-item">
+                    <label>
+                      <input
+                        type="checkbox"
+                        class="teacher-day"
+                        value="Friday"
+                      />
+                      Friday
+                    </label>
+                    <div
+                      class="day-time-slots"
+                      style="
+                        display: none;
+                        margin-left: 1.5rem;
+                        margin-top: 0.5rem;
+                      "
+                    >
+                      <select
+                        multiple
+                        class="day-slots-select"
+                        style="
+                          width: 100%;
+                          padding: 0.5rem;
+                          border: 1px solid var(--border-color);
+                          border-radius: 8px;
+                          background: var(--bg-color);
+                          min-height: 100px;
+                        "
+                      ></select>
+                      <small
+                        style="
+                          color: var(--text-light);
+                          display: block;
+                          margin-top: 2px;
+                        "
+                        >Hold Ctrl/Cmd to select multiple</small
+                      >
+                    </div>
+                  </div>
+                  <div class="day-availability-item">
+                    <label>
+                      <input
+                        type="checkbox"
+                        class="teacher-day"
+                        value="Saturday"
+                      />
+                      Saturday
+                    </label>
+                    <div
+                      class="day-time-slots"
+                      style="
+                        display: none;
+                        margin-left: 1.5rem;
+                        margin-top: 0.5rem;
+                      "
+                    >
+                      <select
+                        multiple
+                        class="day-slots-select"
+                        style="
+                          width: 100%;
+                          padding: 0.5rem;
+                          border: 1px solid var(--border-color);
+                          border-radius: 8px;
+                          background: var(--bg-color);
+                          min-height: 100px;
+                        "
+                      ></select>
+                      <small
+                        style="
+                          color: var(--text-light);
+                          display: block;
+                          margin-top: 2px;
+                        "
+                        >Hold Ctrl/Cmd to select multiple</small
+                      >
+                    </div>
+                  </div>
+                </div>
+                <small style="color: var(--text-light)"
+                  >If no day is selected, availability applies to all
+                  days.</small
+                >
+              </div>
+              <button class="btn btn-primary" id="add-teacher-btn">
+                <i class="fas fa-user-plus"></i> Add Teacher
+              </button>
+            </div>
+
+            <!-- Subjects -->
+            <div class="card">
+              <h3 class="card-title">
+                <i class="fas fa-book"></i> Subjects/Classes
+              </h3>
+              <div id="subjects-list" class="items-list"></div>
+              <div class="form-group">
+                <label>Semester</label>
+                <select id="subject-semester">
+                  <option value="Semester 1">Semester 1</option>
+                </select>
+              </div>
+              <!-- Row 1: Subject and Sessions per Week -->
+              <div class="form-grid">
+                <div class="form-group">
+                  <label>Subject Name</label>
+                  <div class="searchable-select" id="subject-select">
+                    <input
+                      type="text"
+                      id="subject-name"
+                      placeholder="Type to search subjects..."
+                      autocomplete="off"
+                    />
+                    <ul
+                      class="options"
+                      id="subject-options"
+                      style="display: none"
+                    ></ul>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label>Sessions per Week</label>
+                  <input
+                    type="number"
+                    id="sessions-per-week"
+                    min="1"
+                    max="10"
+                    value="2"
+                    placeholder="2"
+                  />
+                </div>
+              </div>
+
+              <!-- Row 2: Department and Teacher -->
+              <div class="form-grid">
+                <div class="form-group">
+                  <label>Department</label>
+                  <div
+                    class="searchable-select dept-fixed"
+                    id="department-select"
+                  >
+                    <input
+                      type="text"
+                      id="department-name"
+                      placeholder="Type to search departments..."
+                      autocomplete="off"
+                    />
+                    <ul
+                      class="options"
+                      id="department-options"
+                      style="display: none"
+                    ></ul>
+                  </div>
+                  <div
+                    id="department-tags-below"
+                    class="input-tag-group"
+                    style="margin-top: 0.5rem"
+                  ></div>
+                </div>
+                <div class="form-group">
+                  <label>Teacher</label>
+                  <select id="subject-teacher" disabled>
+                    <option value="">Select a teacher...</option>
+                  </select>
+                  <small id="teacher-help-text" style="color: #999; display: none;">
+                    Select a subject first
+                  </small>
+                </div>
+              </div>
+              <button class="btn btn-primary" id="add-subject-btn">
+                <i class="fas fa-book-plus"></i> Add Subject
+              </button>
+            </div>
+
+            <!-- Classrooms -->
+            <div class="card">
+              <h3 class="card-title">
+                <i class="fas fa-door-open"></i> Classrooms
+              </h3>
+              <div id="classrooms-list">
+                <div class="input-tag-group"></div>
+              </div>
+              <div class="input-group">
+                <input
+                  type="text"
+                  id="classroom-name"
+                  placeholder="e.g., Room 101"
+                />
+                <button class="btn btn-secondary" id="add-classroom-btn">
+                  <i class="fas fa-plus"></i> Add
+                </button>
+              </div>
+            </div>
+
+            <!-- Generate Button -->
+            <div class="action-bar">
+              <button class="btn btn-success btn-large" id="generate-btn">
+                <i class="fas fa-magic"></i> Generate Timetable
+              </button>
+            </div>
+          </section>
+
+          <!-- Timetable Section -->
+          <section id="timetable-section" class="section">
+            <div class="section-header">
+              <h2 class="section-title">
+                <i class="fas fa-calendar-alt"></i>
+                Generated Timetable
+              </h2>
+              <div class="button-group">
+                <button class="btn btn-primary" id="export-pdf-btn">
+                  <i class="fas fa-file-pdf"></i> Export PDF
+                </button>
+                <button class="btn btn-success" id="export-excel-btn">
+                  <i class="fas fa-file-excel"></i> Export Excel
+                </button>
+              </div>
+            </div>
+
+            <div id="timetable-container">
+              <p class="empty-state">
+                <i class="fas fa-calendar-times"></i>
+                No timetable generated yet. Please input data and click
+                "Generate Timetable".
+              </p>
+            </div>
+          </section>
+
+          <!-- Conflicts Section -->
+          <section id="conflicts-section" class="section">
+            <h2 class="section-title">
+              <i class="fas fa-exclamation-circle"></i>
+              Scheduling Conflicts
+            </h2>
+            <div class="card">
+              <div id="conflicts-container">
+                <p class="empty-state">
+                  <i class="fas fa-check-circle"></i>
+                  No conflicts detected.
+                </p>
+              </div>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <!-- Modal rebuilt from scratch -->
+    <div id="edit-modal" class="modal">
+      <div class="modal-content fixed-modal">
+        <div class="modal-header">
+          <h3><i class="fas fa-edit"></i> Add / Edit Entry</h3>
+          <span class="close" id="close-modal">&times;</span>
+        </div>
+        <div class="modal-body new-modal">
+          <div class="form-group">
+            <label>Subject</label>
+            <div class="combo" data-combo="subject">
+              <input
+                type="text"
+                id="combo-subject-input"
+                placeholder="Select"
+                autocomplete="off"
+              />
+              <ul class="combo-list" id="combo-subject-list"></ul>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Teacher</label>
+            <div class="combo" data-combo="teacher">
+              <input
+                type="text"
+                id="combo-teacher-input"
+                placeholder="Select"
+                autocomplete="off"
+              />
+              <ul class="combo-list" id="combo-teacher-list"></ul>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Semester</label>
+            <select id="dropdown-semester">
+              <option value="">Select</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Department</label>
+            <select id="dropdown-department" multiple></select>
+          </div>
+          <div class="form-group">
+            <label>Available Classrooms</label>
+            <div id="checkbox-classrooms" class="checkbox-group"></div>
+          </div>
+          <div class="form-group">
+            <label>Description</label>
+            <textarea
+              id="text-description"
+              placeholder="Optional notes or description…"
+            ></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" id="cancel-edit-btn">Cancel</button>
+          <button class="btn btn-primary" id="save-edit-btn">Save</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Notification Container -->
+    <div id="notification-container" class="notification-container"></div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirm-modal" class="modal">
+      <div class="modal-content confirm-modal-content">
+        <div class="modal-header">
+          <h3><i class="fas fa-question-circle"></i> Confirmation</h3>
+          <span class="close" id="close-confirm-modal">&times;</span>
+        </div>
+        <div class="modal-body">
+          <p id="confirm-message">Are you sure?</p>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" id="cancel-confirm-btn">
+            Cancel
+          </button>
+          <button class="btn btn-danger" id="confirm-action-btn">
+            Confirm
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay">
+      <div class="spinner"></div>
+      <p>Generating timetable...</p>
+    </div>
+
+    <script>
+      // Searchable multi-select for Teacher Subjects
+      // Define a single shared SUBJECTS list on window so every section uses the same data
+      window.SUBJECTS = window.SUBJECTS || [
+        "Application of ICT (Lab)",
+        "Application of ICT (Theory)",
+        "Artificial Intelligence",
+        "Basic Mathematics Deficiency-I",
+        "Basic Mathematics Deficiency-II",
+        "Business Communication & Report Writing",
+        "Calculus & Analytical Geometry",
+        "Civics and Community Engagement",
+        "Cognitive Psychology",
+        "Computer Networks",
+        "Drawing From Observation & Material",
+        "Environmental Sciences",
+        "Ethical Issues in Psychology",
+        "Expository Writing",
+        "Figure & Perspective Drawing",
+        "Financial Accounting",
+        "Fundamentals of Accounting",
+        "Fundamentals of Drawing",
+        "Functional English",
+        "History of Arts in Ancient Civilization",
+        "Human Resource Management",
+        "Ideology and Constitution of Pakistan",
+        "Introduction to Business",
+        "Introduction to Linguistics",
+        "Introduction to Literary Studies",
+        "Introduction to Psychology",
+        "Islamic Studies",
+        "Light, Color & Imaging",
+        "Material & Process",
+        "Object Oriented Programming (Lab)",
+        "Object Oriented Programming (Theory)",
+        "Pakistan Studies",
+        "Programming Fundamentals (Lab)",
+        "Programming Fundamentals (Theory)",
+        "Quantitative Reasoning (Discrete Structure)",
+        "Quantitative Reasoning-I",
+        "Social Psychology",
+        "Understanding of Holy Quran-I",
+        "Visual Communication-I",
+      ];
+      (function () {
+        const SUBJECTS = window.SUBJECTS;
+        const wrapper = document.getElementById("teacher-subjects-select");
+        const input = document.getElementById("teacher-subjects-input");
+        const list = document.getElementById("teacher-subjects-options");
+        const hidden = document.getElementById("teacher-subjects");
+        const tagsContainer = document.getElementById("teacher-subjects-tags");
+        if (!wrapper || !input || !list || !hidden || !tagsContainer) return;
+
+        let selected = [];
+        function normalize(s) {
+          return (s || "").toLowerCase().trim();
+        }
+        function syncHidden() {
+          hidden.value = selected.join(", ");
+        }
+        function renderTags() {
+          if (selected.length === 0) {
+            tagsContainer.innerHTML = "";
+            return;
+          }
+          tagsContainer.innerHTML = selected
+            .map(
+              (val) =>
+                `<span class="tag">${val} <i class="fas fa-times" data-remove="${val}"></i></span>`
+            )
+            .join("");
+          tagsContainer.querySelectorAll("i[data-remove]").forEach((icon) => {
+            icon.addEventListener("click", () => {
+              const v = icon.getAttribute("data-remove");
+              selected = selected.filter((s) => s !== v);
+              renderTags();
+              syncHidden();
+            });
+          });
+        }
+        function renderOptions(filter = "") {
+          const q = normalize(filter);
+          const items = SUBJECTS.filter(
+            (s) => normalize(s).includes(q) && !selected.includes(s)
+          ).sort((a, b) => a.localeCompare(b));
+          let html = "";
+          if (items.length === 0) {
+            html += '<li class="option disabled">No matches</li>';
+          } else {
+            html += items
+              .map((s) => `<li class="option" data-value="${s}">${s}</li>`)
+              .join("");
+          }
+          // Always append a clear custom entry option for manual typing
+          html += '<li class="option" data-custom="1">Other (Custom)...</li>';
+          list.innerHTML = html;
+        }
+        function openList() {
+          renderOptions(input.value);
+          list.style.display = "block";
+          wrapper.classList.add("open");
+        }
+        function closeList() {
+          list.style.display = "none";
+          wrapper.classList.remove("open");
+        }
+
+        input.addEventListener("focus", openList);
+        input.addEventListener("input", () => {
+          renderOptions(input.value);
+          list.style.display = "block";
+        });
+        input.addEventListener("keydown", (e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            const val = input.value.trim();
+            // Prefer exact match from SUBJECTS (case-insensitive)
+            const exact = SUBJECTS.find((s) => normalize(s) === normalize(val));
+            const toAdd = exact || val;
+            if (toAdd && !selected.includes(toAdd)) {
+              selected.push(toAdd);
+              renderTags();
+              syncHidden();
+            }
+            input.value = "";
+            closeList();
+          }
+        });
+        list.addEventListener("click", (e) => {
+          const li = e.target.closest(".option");
+          if (!li || li.classList.contains("disabled")) return;
+          if (li.hasAttribute("data-custom")) {
+            // Allow manual entry: add the currently typed value if present
+            const typed = input.value.trim();
+            if (typed && !selected.includes(typed)) {
+              selected.push(typed);
+              renderTags();
+              syncHidden();
+              input.value = "";
+            }
+            input.focus();
+            closeList();
+            return;
+          }
+          const val = li.getAttribute("data-value");
+          if (val && !selected.includes(val)) {
+            selected.push(val);
+            renderTags();
+            syncHidden();
+          }
+          input.value = "";
+          closeList();
+        });
+        document.addEventListener("click", (e) => {
+          if (!wrapper.contains(e.target)) closeList();
+        });
+        // Listen for external reset to clear internal selection state fully
+        window.addEventListener("reset-teacher-subjects", () => {
+          selected = [];
+          renderTags();
+          syncHidden();
+        });
+
+        // Initialize
+        renderTags();
+        syncHidden();
+      })();
+
+      // Searchable dropdown for Teacher Name
+      (function () {
+        const TEACHERS = [
+          "Dr. Amad Ud Din",
+          "Dr. Abdul Waheed",
+          "Mr. Muhammad Adil",
+          "Ms. Khadija Waheed",
+          "Ms. Aina Merzia",
+          "Dr. Rubab Tahir",
+          "Ms. Amna Malik",
+          "Ms. Farah Nazeer",
+          "Mr. Muhammad Faran",
+          "Dr. Aisha Parveen",
+          "Dr. Aziz Haider",
+          "Dr. Muhammad Bilal",
+          "Dr. Saniya Moazzam",
+          "Dr. Samiya Bashir",
+          "Mr. Imran Ejaz",
+          "Dr. Salman Chugtai",
+          "Ms. Esha Gul",
+        ];
+        const input = document.getElementById("teacher-name");
+        const list = document.getElementById("teacher-options");
+        const wrapper = document.getElementById("teacher-select");
+
+        function normalize(s) {
+          return s.toLowerCase().trim();
+        }
+
+        function renderOptions(filter = "") {
+          const q = normalize(filter);
+          const items = TEACHERS.filter((t) => normalize(t).includes(q)).sort(
+            (a, b) => a.localeCompare(b)
+          );
+          if (items.length === 0) {
+            list.innerHTML = '<li class="option disabled">No matches</li>';
+          } else {
+            list.innerHTML = items
+              .map((t) => `<li class="option" data-value="${t}">${t}</li>`)
+              .join("");
+          }
+        }
+
+        function openList() {
+          renderOptions(input.value);
+          list.style.display = "block";
+          wrapper.classList.add("open");
+        }
+        function closeList() {
+          list.style.display = "none";
+          wrapper.classList.remove("open");
+        }
+
+        input.addEventListener("focus", openList);
+        input.addEventListener("input", () => {
+          renderOptions(input.value);
+          list.style.display = "block";
+        });
+
+        list.addEventListener("click", (e) => {
+          const li = e.target.closest(".option");
+          if (!li || li.classList.contains("disabled")) return;
+          input.value = li.getAttribute("data-value");
+          closeList();
+        });
+
+        document.addEventListener("click", (e) => {
+          if (!wrapper.contains(e.target)) closeList();
+        });
+
+        // Basic keyboard navigation + free-text commit on Enter
+        let activeIndex = -1;
+        input.addEventListener("keydown", (e) => {
+          const isOpen = list.style.display === "block";
+          const opts = Array.from(
+            list.querySelectorAll(".option:not(.disabled)")
+          );
+          if (isOpen && e.key === "ArrowDown") {
+            e.preventDefault();
+            if (opts.length) activeIndex = (activeIndex + 1) % opts.length;
+          } else if (isOpen && e.key === "ArrowUp") {
+            e.preventDefault();
+            if (opts.length)
+              activeIndex = (activeIndex - 1 + opts.length) % opts.length;
+          } else if (e.key === "Enter") {
+            e.preventDefault();
+            if (isOpen && activeIndex >= 0 && opts[activeIndex]) {
+              input.value = opts[activeIndex].getAttribute("data-value");
+            } else {
+              // Accept typed text even if it's not in the suggestions
+              input.value = input.value.trim();
+            }
+            closeList();
+          }
+          if (isOpen)
+            opts.forEach((el, i) =>
+              el.classList.toggle("active", i === activeIndex)
+            );
+        });
+      })();
+
+      // Searchable dropdown for Subject Name (main form and edit modal)
+      (function () {
+        const SUBJECTS = window.SUBJECTS;
+
+        function attachSearchableDropdown(inputId, listId, wrapperId) {
+          const input = document.getElementById(inputId);
+          const list = document.getElementById(listId);
+          const wrapper = document.getElementById(wrapperId);
+          if (!input || !list || !wrapper) return;
+
+          function normalize(s) {
+            return (s || "").toLowerCase().trim();
+          }
+
+          function renderOptions(filter = "") {
+            const q = normalize(filter);
+            const items = SUBJECTS.filter((t) => normalize(t).includes(q)).sort(
+              (a, b) => a.localeCompare(b)
+            );
+            if (items.length === 0) {
+              list.innerHTML = '<li class="option disabled">No matches</li>';
+            } else {
+              list.innerHTML = items
+                .map(
+                  (t) => `<li class=\"option\" data-value=\"${t}\">${t}</li>`
+                )
+                .join("");
+            }
+          }
+
+          function openList() {
+            renderOptions(input.value);
+            list.style.display = "block";
+            wrapper.classList.add("open");
+          }
+          function closeList() {
+            list.style.display = "none";
+            wrapper.classList.remove("open");
+          }
+
+          input.addEventListener("focus", openList);
+          input.addEventListener("input", () => {
+            renderOptions(input.value);
+            list.style.display = "block";
+          });
+
+          list.addEventListener("click", (e) => {
+            const li = e.target.closest(".option");
+            if (!li || li.classList.contains("disabled")) return;
+            input.value = li.getAttribute("data-value");
+            closeList();
+          });
+
+          document.addEventListener("click", (e) => {
+            if (!wrapper.contains(e.target)) closeList();
+          });
+
+          // Keyboard navigation + free-text commit on Enter
+          let activeIndex = -1;
+          input.addEventListener("keydown", (e) => {
+            const isOpen = list.style.display === "block";
+            const opts = Array.from(
+              list.querySelectorAll(".option:not(.disabled)")
+            );
+            if (isOpen && e.key === "ArrowDown") {
+              e.preventDefault();
+              if (opts.length) activeIndex = (activeIndex + 1) % opts.length;
+            } else if (isOpen && e.key === "ArrowUp") {
+              e.preventDefault();
+              if (opts.length)
+                activeIndex = (activeIndex - 1 + opts.length) % opts.length;
+            } else if (e.key === "Enter") {
+              e.preventDefault();
+              if (isOpen && activeIndex >= 0 && opts[activeIndex]) {
+                input.value = opts[activeIndex].getAttribute("data-value");
+              } else {
+                // Accept typed text even if it's not in the suggestions
+                input.value = input.value.trim();
+              }
+              closeList();
+            }
+            if (isOpen)
+              opts.forEach((el, i) =>
+                el.classList.toggle("active", i === activeIndex)
+              );
+          });
+        }
+
+        // Main form subject
+        attachSearchableDropdown(
+          "subject-name",
+          "subject-options",
+          "subject-select"
+        );
+        // Edit modal subject
+        attachSearchableDropdown(
+          "edit-subject",
+          "edit-subject-options",
+          "edit-subject-select"
+        );
+      })();
+
+      // Searchable multi-select for Department (Subjects/Classes)
+      (function () {
+        const DEPARTMENTS = [
+          "CS – Computer Science",
+          "SE – Software Engineering",
+          "BBA – Business Administration",
+          "PSY – Psychology",
+          "AF – Accounting & Finance",
+          "ID – Interior Design",
+          "ELS – English & Linguistic Studies",
+          "DDCA – Digital Design & Computer Arts",
+        ];
+        const wrapper = document.getElementById("department-select");
+        const input = document.getElementById("department-name");
+        const list = document.getElementById("department-options");
+        if (!(wrapper && input && list)) return;
+
+        // Make wrapper a containing block for absolute dropdown positioning
+        wrapper.style.position = "relative";
+        wrapper.style.display = "block";
+
+        // Create a row to layout tags + input, keep dropdown below the row
+        let deptRow = wrapper.querySelector(".dept-row");
+        if (!deptRow) {
+          deptRow = document.createElement("div");
+          deptRow.className = "dept-row";
+          deptRow.style.display = "flex";
+          deptRow.style.flexWrap = "nowrap";
+          deptRow.style.alignItems = "center";
+          deptRow.style.gap = "0.5rem";
+          wrapper.insertBefore(deptRow, input);
+          deptRow.appendChild(input);
+        }
+
+        // Create tags container before input if not present, keep single-line scroll
+        let tagsContainer = document.getElementById("department-tags-below");
+        if (!tagsContainer) {
+          // Fallback: if below container is missing, create it after wrapper
+          tagsContainer = document.createElement("div");
+          tagsContainer.id = "department-tags-below";
+          tagsContainer.className = "input-tag-group";
+          tagsContainer.style.marginTop = "0.5rem";
+          wrapper.parentElement &&
+            wrapper.parentElement.appendChild(tagsContainer);
+        }
+        // Input grows to fill remaining space
+        input.style.flex = "1 1 auto";
+        input.style.minWidth = "0";
+
+        // Ensure the dropdown list is absolutely positioned below input
+        list.style.position = "absolute";
+        list.style.left = "0";
+        list.style.right = "0";
+        list.style.top = "calc(100% + 4px)";
+        list.style.zIndex = "1500";
+        list.style.maxHeight = "40vh";
+        list.style.overflowY = "auto";
+        list.style.background = "var(--card-bg)";
+        list.style.border = "1px solid var(--border-color)";
+        list.style.borderRadius = "8px";
+        list.style.boxShadow = "var(--shadow-lg)";
+        list.style.display = "none";
+
+        let selected = [];
+        function normalize(s) {
+          return (s || "").toLowerCase().trim();
+        }
+        function renderTags() {
+          if (selected.length === 0) {
+            tagsContainer.innerHTML = "";
+            return;
+          }
+          tagsContainer.innerHTML = selected
+            .map(
+              (val) =>
+                `<span class="tag">${val} <i class="fas fa-times" data-remove="${val}"></i></span>`
+            )
+            .join("");
+          tagsContainer.querySelectorAll("i[data-remove]").forEach((icon) => {
+            icon.addEventListener("click", () => {
+              const v = icon.getAttribute("data-remove");
+              selected = selected.filter((s) => s !== v);
+              renderTags();
+            });
+          });
+        }
+        function renderOptions(filter = "") {
+          const q = normalize(filter);
+          const items = DEPARTMENTS.filter(
+            (d) => normalize(d).includes(q) && !selected.includes(d)
+          ).sort((a, b) => a.localeCompare(b));
+          if (items.length === 0) {
+            list.innerHTML = '<li class="option disabled">No matches</li>';
+          } else {
+            list.innerHTML = items
+              .map((d) => `<li class="option" data-value="${d}">${d}</li>`)
+              .join("");
+          }
+        }
+        function openList() {
+          renderOptions(input.value);
+          list.style.display = "block";
+          wrapper.classList.add("open");
+        }
+        function closeList() {
+          list.style.display = "none";
+          wrapper.classList.remove("open");
+        }
+
+        input.addEventListener("focus", openList);
+        input.addEventListener("input", () => {
+          renderOptions(input.value);
+          list.style.display = "block";
+        });
+        input.addEventListener("keydown", (e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            const val = input.value.trim();
+            const exact = DEPARTMENTS.find(
+              (d) => normalize(d) === normalize(val)
+            );
+            const toAdd = exact || val;
+            if (toAdd && !selected.includes(toAdd)) {
+              selected.push(toAdd);
+              renderTags();
+            }
+            input.value = "";
+            // keep dropdown open for multi-select stability
+            renderOptions("");
+            list.style.display = "block";
+          } else if (e.key === "Escape") {
+            closeList();
+          }
+        });
+
+        list.addEventListener("click", (e) => {
+          const li = e.target.closest(".option");
+          if (!li || li.classList.contains("disabled")) return;
+          const val = li.getAttribute("data-value");
+          if (val && !selected.includes(val)) {
+            selected.push(val);
+            renderTags();
+          }
+          input.value = "";
+          // keep dropdown open after each selection
+          renderOptions("");
+          list.style.display = "block";
+        });
+
+        document.addEventListener("click", (e) => {
+          if (!wrapper.contains(e.target)) closeList();
+        });
+
+        // Keyboard navigation for dropdown list
+        let activeIndex = -1;
+        input.addEventListener("keydown", (e) => {
+          if (list.style.display !== "block") return;
+          const opts = Array.from(
+            list.querySelectorAll(".option:not(.disabled)")
+          );
+          if (opts.length === 0) return;
+          if (e.key === "ArrowDown") {
+            e.preventDefault();
+            activeIndex = (activeIndex + 1) % opts.length;
+          } else if (e.key === "ArrowUp") {
+            e.preventDefault();
+            activeIndex = (activeIndex - 1 + opts.length) % opts.length;
+          } else if (e.key === "Enter") {
+            if (activeIndex >= 0 && opts[activeIndex]) {
+              const v = opts[activeIndex].getAttribute("data-value");
+              if (v && !selected.includes(v)) {
+                selected.push(v);
+                renderTags();
+              }
+              input.value = "";
+              closeList();
+            }
+          }
+          opts.forEach((el, i) =>
+            el.classList.toggle("active", i === activeIndex)
+          );
+        });
+
+        // Observe tags container; if cleared externally, reset selection to keep behavior consistent
+        const deptResetObserver = new MutationObserver(() => {
+          const hasTags = !!tagsContainer.querySelector(".tag");
+          if (!hasTags) {
+            selected = [];
+          }
+        });
+        deptResetObserver.observe(tagsContainer, { childList: true });
+
+        // Initialize
+        renderTags();
+      })();
+
+      // Searchable dropdown for Time Slots
+      (function () {
+        const TIME_SLOTS = [
+          "08:30 – 10:00",
+          "10:00 – 11:30",
+          "11:30 – 01:00",
+          "01:00 – 02:30",
+          "02:30 – 04:00",
+        ];
+        const input = document.getElementById("new-timeslot");
+        const list = document.getElementById("timeslot-options");
+        const wrapper = document.getElementById("timeslot-select");
+
+        if (!input || !list || !wrapper) return;
+
+        function normalize(s) {
+          return s.toLowerCase().trim();
+        }
+
+        function renderOptions(filter = "") {
+          const q = normalize(filter);
+          const items = TIME_SLOTS.filter((t) => normalize(t).includes(q));
+          if (items.length === 0) {
+            list.innerHTML = '<li class="option disabled">No matches</li>';
+          } else {
+            list.innerHTML = items
+              .map((t) => `<li class="option" data-value="${t}">${t}</li>`)
+              .join("");
+          }
+        }
+
+        function openList() {
+          renderOptions(input.value);
+          list.style.display = "block";
+          wrapper.classList.add("open");
+        }
+        function closeList() {
+          list.style.display = "none";
+          wrapper.classList.remove("open");
+        }
+
+        input.addEventListener("focus", openList);
+        input.addEventListener("input", () => {
+          renderOptions(input.value);
+          list.style.display = "block";
+        });
+
+        list.addEventListener("click", (e) => {
+          const li = e.target.closest(".option");
+          if (!li || li.classList.contains("disabled")) return;
+          input.value = li.getAttribute("data-value");
+          closeList();
+        });
+
+        document.addEventListener("click", (e) => {
+          if (!wrapper.contains(e.target)) closeList();
+        });
+
+        // Keyboard navigation
+        let activeIndex = -1;
+        input.addEventListener("keydown", (e) => {
+          const isOpen = list.style.display === "block";
+          const opts = Array.from(
+            list.querySelectorAll(".option:not(.disabled)")
+          );
+
+          if (isOpen && e.key === "ArrowDown") {
+            e.preventDefault();
+            if (opts.length) activeIndex = (activeIndex + 1) % opts.length;
+          } else if (isOpen && e.key === "ArrowUp") {
+            e.preventDefault();
+            if (opts.length)
+              activeIndex = (activeIndex - 1 + opts.length) % opts.length;
+          } else if (e.key === "Enter") {
+            if (isOpen && activeIndex >= 0 && opts[activeIndex]) {
+              e.preventDefault();
+              e.stopPropagation();
+              input.value = opts[activeIndex].getAttribute("data-value");
+              closeList();
+              return;
+            }
+          }
+
+          if (isOpen) {
+            opts.forEach((el, i) =>
+              el.classList.toggle("active", i === activeIndex)
+            );
+          }
+        });
+      })();
+    </script>
+    <!-- External Libraries for Excel and PDF Export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+    
+    <script src="main.js"></script>
+  </body>
+</html>
