@@ -5,6 +5,9 @@ A single-page, browser-based timetable generator for universities. It lets you d
 ## Developer
 - Muhammad Amaan
 
+## Important Info
+This project is specially for a specific University, So if you wanna use, make sure the related and necessary changes like slots, Teacher names etc, make these edits first.
+
 ## Features
 - Semester configuration with multi-semester support
 - Customizable days and time slots
